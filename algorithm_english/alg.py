@@ -10,7 +10,7 @@ from constants.circuit_breaker import *
 from constants.transformer import *
 
 
-class Цех:
+class Workshop:
     calculated_active_power = 0
     calculated_reactive_power = 0
     calculated_active_power_summ = 0
@@ -204,7 +204,7 @@ class Цех:
                 self.transformer_load_coeff, 2
             )
 
-    def расчет_расчетной_нагрузки_а_гпп_тп(self):
+    def calc_of_calculated_load_a_gpp_tp(self):
         if self.transformers_count != 0:
             self.calculated_load_a_gpp_tp = sqrt(
                 (
@@ -224,7 +224,7 @@ class Цех:
                 "calculated_active_power_summ",
             )
 
-    def расчет_расчетной_нагрузки_н_гпп_тп(self):
+    def calc_of_calculated_load_n_gpp_tp(self):
         if self.transformers_count != 0:
             self.calculated_load_n_gpp_tp = sqrt(
                 (
@@ -271,7 +271,7 @@ class Цех:
                 self.full_calculated_transformers_load / (sqrt(3) * 10)
             )
 
-    def расчет_к1(self, transformers_count):
+    def calc_of_k1(self, transformers_count):
         if self.transformers_count == 1:
             self.k1 = 1
         elif self.transformers_count == 2:
@@ -279,7 +279,7 @@ class Цех:
         elif self.transformers_count == 4:
             self.k1 = 0.8
 
-    def расчет_допустимой_токовой_нагрузка_н_гпп_тп(self):
+    def calc_of_permissible_current_load_n_gpp_tp(self):
         if self.transformers_count != 0:
             self.permissible_current_load_n_gpp_tp = (
                 self.calculated_current_load_n_gpp_tp / self.k1
@@ -289,7 +289,7 @@ class Цех:
                 self.calculated_current_load_n_gpp_tp
             )
 
-    def расчет_допустимой_токовой_нагрузка_а_гпп_тп(self):
+    def calc_of_permissible_current_load_a_gpp_tp(self):
         if self.transformers_count != 0:
             self.permissible_current_load_a_gpp_tp = (
                 self.calculated_current_load_a_gpp_tp / (self.k1 * self.k2)
@@ -299,7 +299,7 @@ class Цех:
                 self.calculated_current_load_a_gpp_tp
             )
 
-    def выбор_кабелей(self, transformers_count):
+    def cable_choosing(self, transformers_count):
         if self.transformers_count > 0:
             # cable = None
             try:
@@ -381,7 +381,7 @@ class Цех:
             except StopIteration:
                 print("done")
 
-    def расчет_капитальных_вложений_на_линию(
+    def calc_of_line_investments(
         self, transformers_count, line_lengths
     ):
         if transformers_count != 0:
@@ -402,7 +402,7 @@ class Цех:
                 ]
             )
 
-    def расчет_расхода_цветного_материала(
+    def calc_of_color_material_consumption(
         self, transformers_count, line_lengths
     ):
         if transformers_count > 0:
@@ -423,13 +423,13 @@ class Цех:
                 ]
             )
 
-    def расчет_коэффициента_загрузки(self, transformers_count):
-        # if transformers_count > 0:
-        self.load_coeff = (
-            self.calculated_current_load_n_gpp_tp / self.cable_current
-        )
+    def calc_of_load_coeff(self, transformers_count):
+        if transformers_count > 0:
+            self.load_coeff = (
+                self.calculated_current_load_n_gpp_tp / self.cable_current
+            )
 
-    def расчет_потерь_мощности_рассматриваемой_линии(
+    def calc_of_power_loss_of_considered_line(
         self, transformers_count, line_lengths
     ):
         if transformers_count > 0:
@@ -443,35 +443,35 @@ class Цех:
         # elif transformers_count == 0:
         #     self.power_loss_of_considered_line = self.active_power_loss_ts * line_lengths * pow(10, -3) * self.load_coeff**2
 
-    def расчет_потерь_электроэнергии(self):
+    def calc_of_elictricity_loss(self):
         self.elictricity_loss = (
             self.power_loss_of_considered_line * count_of_working_hours
         )
 
-    def расчет_стоимости_потерь_электроэнергии(self):
+    def calc_of_electricity_loss_cost(self):
         self.electricity_loss_cost = (
             self.elictricity_loss * cost__of_kw_electricity * pow(10, -3)
         )
 
-    def расчет_стоимости_амортизационных_отчислений(self):
+    def calc_of_deprecation_value(self):
         self.deprecation_value = (
             coefficient_depreciation_deductions * self.line_investments
         )
 
-    def расчет_капитальных_вложений_выключатель(
+    def calc_of_capital_investments_switcher(
         self, switchers_count, switcher_prices
     ):
         self.capital_investments_switcher = (
             switchers_count * switcher_prices
         )
 
-    def расчет_стоимости_амортизационных_отчислений_выключатель(self):
-        self.deprecation_value_for  = (
+    def calc_of_deprecation_value_for_switcher(self):
+        self.deprecation_value_for_switcher  = (
             coefficient_depreciation_deductions_switcher
             * self.capital_investments_switcher
         )
 
-    def расчет_стоимости_трансформаторов(
+    def calc_of_transformer_price(
         self, transformers_count
     ):
         if transformers_count != 0:
@@ -479,7 +479,7 @@ class Цех:
                 transformers_count * transformers_prices[nominal_powers_of_transformers.index(self.selected_transformer)]
             )
 
-    def расчет_привиденных_потерь_в_тп(
+    def calc_of_reduced_losses_in_tp(
         self, transformers_count, transformers_types
     ):
         if transformers_types == "масляный" and transformers_count != 0:
@@ -511,7 +511,7 @@ class Цех:
                 * self.transformer_load_coeff ** 2
             )
 
-    def расчет_потерь_электроэнергии_в_тп(
+    def calc_of_loss_electricity_in_tp(
         self, transformers_count, transformers_types
     ):
         if transformers_types == "масляный" and transformers_count != 0:
@@ -547,7 +547,7 @@ class Цех:
                 * count_of_working_hours
             )
 
-    def расчет_стоимости_потерь_электроэнергии_в_тп(self, transformers_count):
+    def calc_of_cost_losses_of_electric_energy_in_tp(self, transformers_count):
         if transformers_count != 0:
             self.cost_losses_of_electric_energy_in_tp = (
                 self.loss_electricity_in_tp
@@ -555,7 +555,7 @@ class Цех:
                 * pow(10, -3)
             )
 
-    def расчет_стоимости_амортизационных_отчислений_на_тп(
+    def calc_of_deprecation_value_for_tp(
         self, transformers_count
     ):
         if transformers_count != 0:
@@ -565,7 +565,7 @@ class Цех:
                 * coefficient_depreciation_deductions_tp
             )
 
-    def расчет_длины(self, workshops_coords):
+    def calc_of_length(self, workshops_coords):
         self.length = abs(gpp_coords[0] - workshops_coords[0]) + abs(
             gpp_coords[1] - abs(workshops_coords[1])
         )
@@ -609,87 +609,88 @@ class Цех:
         self.calc_of_transformer_load_coeff(transformers_count)
         self.calc_of_active_power_loss_ts(transformers_types)
         self.calc_of_reactive_power_loss_ts(transformers_types)
-        self.расчет_расчетной_нагрузки_а_гпп_тп()
-        self.расчет_расчетной_нагрузки_н_гпп_тп()
-        self.расчет_к1(transformers_count)
+        self.calc_of_calculated_load_a_gpp_tp()
+        self.calc_of_calculated_load_n_gpp_tp()
+        self.calc_of_k1(transformers_count)
         self.расчет_расчетной_токовой_нагрузки_а_гпп_тп()
         self.расчет_расчетной_токовой_нагрузки_н_гпп_тп()
-        self.расчет_допустимой_токовой_нагрузка_н_гпп_тп()
-        self.расчет_допустимой_токовой_нагрузка_а_гпп_тп()
-        self.выбор_кабелей(transformers_count)
-        self.расчет_капитальных_вложений_на_линию(
+        self.calc_of_permissible_current_load_n_gpp_tp()
+        self.calc_of_permissible_current_load_a_gpp_tp()
+        self.cable_choosing(transformers_count)
+        self.calc_of_line_investments(
             transformers_count, line_lengths
         )
-        self.расчет_расхода_цветного_материала(transformers_count, line_lengths)
-        self.расчет_коэффициента_загрузки(transformers_count)
-        self.расчет_потерь_мощности_рассматриваемой_линии(
+        self.calc_of_color_material_consumption(transformers_count, line_lengths)
+        self.calc_of_load_coeff(transformers_count)
+        self.calc_of_power_loss_of_considered_line(
             transformers_count, line_lengths
         )
-        self.расчет_потерь_электроэнергии()
-        self.расчет_стоимости_потерь_электроэнергии()
-        self.расчет_стоимости_амортизационных_отчислений()
-        self.расчет_капитальных_вложений_выключатель(
+        self.calc_of_elictricity_loss()
+        self.calc_of_electricity_loss_cost()
+        self.calc_of_deprecation_value()
+        self.calc_of_capital_investments_switcher(
             switchers_count, switcher_prices
         )
-        self.расчет_стоимости_трансформаторов(
+        self.calc_of_deprecation_value_for_switcher()
+        self.calc_of_transformer_price(
             transformers_count
         )
-        self.расчет_привиденных_потерь_в_тп(
+        self.calc_of_reduced_losses_in_tp(
             transformers_count, transformers_types
         )
-        self.расчет_потерь_электроэнергии_в_тп(
+        self.calc_of_loss_electricity_in_tp(
             transformers_count, transformers_types
         )
-        self.расчет_стоимости_потерь_электроэнергии_в_тп(transformers_count)
-        self.расчет_стоимости_амортизационных_отчислений_на_тп(
+        self.calc_of_cost_losses_of_electric_energy_in_tp(transformers_count)
+        self.calc_of_deprecation_value_for_tp(
             transformers_count
         )
-        self.расчет_длины(workshops_coords)
+        self.calc_of_length(workshops_coords)
 
     # def __repr__(self):
-    # return "<Цех input_param:%d some_param:%d other_param:%d>" %
+    # return "<workshop input_param:%d some_param:%d other_param:%d>" %
     # (self.input_param, self.some_param, self.other_param)
 
     # def __str__(self):
-    # return "<Цех input_param:%d some_param:%d other_param:%d>" %
+    # return "<workshop input_param:%d some_param:%d other_param:%d>" %
     # (self.input_param, self.some_param, self.other_param)
 
 
-нет_доп_цехов = -1
-карта_дополнительных_цехов = {
-    0: [нет_доп_цехов],
-    1: [нет_доп_цехов],
-    2: [нет_доп_цехов],
-    3: [нет_доп_цехов],
-    4: [нет_доп_цехов],
-    5: [нет_доп_цехов],
-    6: [нет_доп_цехов],
-    7: [нет_доп_цехов],
+no_additional_workshops = -1
+additional_workshops_map = {
+    0: [no_additional_workshops],
+    1: [no_additional_workshops],
+    2: [no_additional_workshops],
+    3: [no_additional_workshops],
+    4: [no_additional_workshops],
+    5: [no_additional_workshops],
+    6: [no_additional_workshops],
+    7: [no_additional_workshops],
     8: [6],
-    9: [нет_доп_цехов],
-    10: [нет_доп_цехов],
-    11: [нет_доп_цехов],
+    9: [no_additional_workshops],
+    10: [no_additional_workshops],
+    11: [no_additional_workshops],
     12: [11],
     13: [10],
-    14: [нет_доп_цехов],
+    14: [no_additional_workshops],
 }  # НУЖНО НЕ ЗАБЫТЬ УЧЕСТЬ, что это индексы цехов, а не сами цеха
 
 
 # noinspection NonAsciiCharacters
-class КонтейнерЦехов:
+class WorkshopsContainer:
     line_length = 0.6
     max_time_difference_coeff = 0.9
-    активная_мощность_с_учетом_потерь = 0
-    реактивная_мощность_с_учетом_потерь = 0
+    active_power_with_loss_account = 0
+    reactive_power_with_loss_account = 0
     power_of_compensating_devices = 0
-    потери_мощности_в_ку = 0
+    power_loss_in_compensational_devices = 0
     calculated_active_power_on_gpp = 0
     calculated_reactive_power_on_gpp = 0
-    полная_расчетная_мощность_на_шинах_гпп = 0
-    потери_активной_мощности_в_трансф_гпп = 0
-    потери_реактивной_мощности_в_трансф_гпп = 0
-    полная_расчетная_нагрузка_с_учетом_потерь_мощности = 0
-    напряжение_питающей_линии = 0
+    full_calculated_power_on_tires_gpp = 0
+    active_power_loss_in_transf_gpp = 0
+    reactive_power_loss_in_transf_gpp = 0
+    full_calculated_load_with_account_of_power_losses = 0
+    supply_line_voltage = 0
 
     # к_л = 0
     # к_эа = 0
@@ -699,78 +700,78 @@ class КонтейнерЦехов:
     # с_пл = 0
     # с_аэа = 0
     # с_атп = 0
-    # затраты = 0
+    # expenses = 0
 
-    def расчет_активной_мощности_с_учетом_потерь(self):
-        сумма_расчётных_активных_мощностей = 0
+    def calc_of_active_power_with_loss_account(self):
+        calculated_active_power_sum = 0
 
-        for цех in self.цеха:
-            сумма_расчётных_активных_мощностей += цех.calculated_active_power
-        self.активная_мощность_с_учетом_потерь = сумма_расчётных_активных_мощностей
+        for workshop in self.workshops:
+            calculated_active_power_sum += workshop.calculated_active_power
+        self.active_power_with_loss_account = calculated_active_power_sum
 
-    def расчет_реактивной_мощности_с_учетом_потерь(self):
-        сумма_расчётных_реактивных_мощностей = 0
+    def calc_of_reactive_power_with_loss_account(self):
+        calculated_reactive_power_sum = 0
 
-        for цех in self.цеха:
-            сумма_расчётных_реактивных_мощностей += цех.calculated_reactive_power
-        self.реактивная_мощность_с_учетом_потерь = сумма_расчётных_реактивных_мощностей
+        for workshop in self.workshops:
+            calculated_reactive_power_sum += workshop.calculated_reactive_power
+        self.reactive_power_with_loss_account = calculated_reactive_power_sum
 
     def calc_of_compensating_devices(self):
         tanfi_n = (
-            self.реактивная_мощность_с_учетом_потерь
-            / self.активная_мощность_с_учетом_потерь
+            self.reactive_power_with_loss_account
+            / self.active_power_with_loss_account
         )
         # print(tanfi_n, 'tanfi_n')
-        self.power_of_compensating_devices = self.активная_мощность_с_учетом_потерь * (
+        self.power_of_compensating_devices = self.active_power_with_loss_account * (
             tanfi_n - 0.33
         )
 
-    def расчет_потери_мощности_в_ку(self):
-        self.потери_мощности_в_ку = 0.002 * self.power_of_compensating_devices
+    def calc_of_power_loss_in_compensational_devices(self):
+        self.power_loss_in_compensational_devices = 0.002 * self.power_of_compensating_devices
 
-    def расчет_расчетной_активной_мощности_на_шинах_гпп(self):
+    def calc_of_calculated_active_power_on_gpp(self):
         self.calculated_active_power_on_gpp = (
-            self.активная_мощность_с_учетом_потерь + self.потери_мощности_в_ку
+            self.active_power_with_loss_account + self.power_loss_in_compensational_devices
         ) * self.max_time_difference_coeff
 
-    def расчет_расчетной_реактивной_мощности_на_шинах_гпп(self):
+    def calc_of_calculated_reactive_power_on_tires_gpp(self):
         self.calculated_reactive_power_on_gpp = (
-            self.реактивная_мощность_с_учетом_потерь - self.power_of_compensating_devices
+            self.reactive_power_with_loss_account - self.power_of_compensating_devices
         ) * self.max_time_difference_coeff
 
-    def расчет_полной_расчетной_мощности_на_шинах_гпп(self):
-        self.полная_расчетная_мощность_на_шинах_гпп = sqrt(
+    def calc_of_calculated_full_power_on_tires_gpp(self):
+        self.full_calculated_power_on_tires_gpp = sqrt(
             self.calculated_active_power_on_gpp ** 2
             + self.calculated_reactive_power_on_gpp ** 2
         )
 
-    def расчет_потерь_активной_мощности_в_трансф_гпп(self):
-        self.потери_активной_мощности_в_трансф_гпп = (
-            0.02 * self.полная_расчетная_мощность_на_шинах_гпп
+    def calc_of_loss_active_power_in_transf_gpp(self):
+        self.active_power_loss_in_transf_gpp = (
+            0.02 * self.full_calculated_power_on_tires_gpp
         )
 
-    def расчет_потерь_реактивной_мощности_в_трансф_гпп(self):
-        self.потери_реактивной_мощности_в_трансф_гпп = (
-            0.1 * self.полная_расчетная_мощность_на_шинах_гпп
+    def calc_of_loss_reactive_power_in_transf_gpp(self):
+        self.reactive_power_loss_in_transf_gpp = (
+            0.1 * self.full_calculated_power_on_tires_gpp
         )
 
-    def расчет_полной_расчетной_нагрузки_с_учетом_потерь_мощности(self):
-        self.полная_расчетная_нагрузка_с_учетом_потерь_мощности = sqrt(
+    def calc_of_full_calculated_load_with_account_of_power_losses(self):
+        self.full_calculated_load_with_account_of_power_losses = sqrt(
             (
                 self.calculated_active_power_on_gpp
-                + self.потери_активной_мощности_в_трансф_гпп
+                + self.active_power_loss_in_transf_gpp
             )
             ** 2
             + (
                 self.calculated_reactive_power_on_gpp
-                + self.потери_реактивной_мощности_в_трансф_гпп
+                + self.reactive_power_loss_in_transf_gpp
             )
             ** 2
         )
 
-    def расчет_напряжения_питающей_линии(self):
+    def calc_of_supply_line_voltage(self):
         u1 = (
-            3 * sqrt(self.полная_расчетная_нагрузка_с_учетом_потерь_мощности * 10 ** -3)
+            3 * sqrt(self.full_calculated_load_with_account_of_power_losses * 10 ** -3)
             + 0.5 * self.line_length
         )
 
@@ -779,7 +780,7 @@ class КонтейнерЦехов:
             + 16
             * (
                 self.calculated_active_power_on_gpp
-                + self.потери_активной_мощности_в_трансф_гпп
+                + self.active_power_loss_in_transf_gpp
             )
             * 10 ** -3
         )
@@ -787,7 +788,7 @@ class КонтейнерЦехов:
             sqrt(
                 (
                     self.calculated_active_power_on_gpp
-                    + self.потери_активной_мощности_в_трансф_гпп
+                    + self.active_power_loss_in_transf_gpp
                 )
                 * 10 ** -3
                 * self.line_length
@@ -797,29 +798,29 @@ class КонтейнерЦехов:
             (self.line_length / 16)
             + (
                 self.calculated_active_power_on_gpp
-                + self.потери_активной_мощности_в_трансф_гпп
+                + self.active_power_loss_in_transf_gpp
             )
             * 10 ** -3
         )
 
         sum_u = u1 + u2 + u3 + u4
-        self.напряжение_питающей_линии = sum_u / 4
+        self.supply_line_voltage = sum_u / 4
 
-    def расчёт_дополнительной_мощности(
-        self, основной_цех: Цех, дополнительные_цеха: [Цех]
+    def calc_of_additional_power(
+        self, main_workshop: Workshop, additional_workshops: [Workshop]
     ):
-        основной_цех.calculated_reactive_power_сумма = (
-            основной_цех.calculated_reactive_power
+        main_workshop.calculated_reactive_power_сумма = (
+            main_workshop.calculated_reactive_power
         )
-        основной_цех.calculated_active_power_summ = (
-            основной_цех.calculated_active_power
+        main_workshop.calculated_active_power_summ = (
+            main_workshop.calculated_active_power
         )
 
-        for дополнительный_цех in дополнительные_цеха:
-            основной_цех.calculated_reactive_power_сумма += (
+        for дополнительный_цех in additional_workshops:
+            main_workshop.calculated_reactive_power_сумма += (
                 дополнительный_цех.calculated_reactive_power
             )
-            основной_цех.calculated_active_power_summ += (
+            main_workshop.calculated_active_power_summ += (
                 дополнительный_цех.calculated_active_power
             )
 
@@ -831,21 +832,21 @@ class КонтейнерЦехов:
     с_пл = 0
     с_аэа = 0
     с_атп = 0
-    затраты = 0
+    expenses = 0
 
-    def расчет__затрат(self):
+    def expenses__calculation(self):
         for i in range(workshops_counts):
-            self.к_л += self.цеха[i].line_investments
-            self.к_эа += self.цеха[i].capital_investments_switcher
-            self.к_тп += self.цеха[i].transformer_price
-            self.с_ал += self.цеха[i].deprecation_value
-            self.с_пт += self.цеха[i].cost_losses_of_electric_energy_in_tp
-            self.с_пл += self.цеха[i].electricity_loss_cost
-            self.с_аэа += self.цеха[i].deprecation_value_for_switcher
-            self.с_атп += self.цеха[i].deprecation_value_for_tp
+            self.к_л += self.workshops[i].line_investments
+            self.к_эа += self.workshops[i].capital_investments_switcher
+            self.к_тп += self.workshops[i].transformer_price
+            self.с_ал += self.workshops[i].deprecation_value
+            self.с_пт += self.workshops[i].cost_losses_of_electric_energy_in_tp
+            self.с_пл += self.workshops[i].electricity_loss_cost
+            self.с_аэа += self.workshops[i].deprecation_value_for_switcher
+            self.с_атп += self.workshops[i].deprecation_value_for_tp
 
-    def расчет_затрат(self):
-        self.затраты = (
+    def expenses_calculation(self):
+        self.expenses = (
             0.15 * (self.к_л + self.к_эа + self.к_тп)
             + self.с_ал
             + self.с_пт
@@ -855,9 +856,9 @@ class КонтейнерЦехов:
         )
 
     def __init__(self):
-        self.цеха = []
+        self.workshops = []
         for i in range(len(enterprise_powers)):
-            цех = Цех(
+            workshop = Workshop(
                 enterprise_powers[i],
                 demand_coefficients[i],
                 cos_fi[i],
@@ -870,97 +871,97 @@ class КонтейнерЦехов:
                 switchers_count[i],
                 workshops_coords[i],
             )
-            self.цеха.append(цех)
+            self.workshops.append(workshop)
 
-        # print(self.цеха[0].calculated_active_power  , 'calculated_active_power')
-        self.расчет_активной_мощности_с_учетом_потерь()
-        self.расчет_реактивной_мощности_с_учетом_потерь()
-        # print(self.активная_мощность_с_учетом_потерь, 'активная_мощность_с_учетом_потерь')
-        # print(self.реактивная_мощность_с_учетом_потерь, 'реактивная_мощность_с_учетом_потерь')
+        # print(self.workshops[0].calculated_active_power  , 'calculated_active_power')
+        self.calc_of_active_power_with_loss_account()
+        self.calc_of_reactive_power_with_loss_account()
+        # print(self.active_power_with_loss_account, 'active_power_with_loss_account')
+        # print(self.reactive_power_with_loss_account, 'reactive_power_with_loss_account')
         self.calc_of_compensating_devices()
-        self.расчет_потери_мощности_в_ку()
-        self.расчет_расчетной_активной_мощности_на_шинах_гпп()
-        self.расчет_расчетной_реактивной_мощности_на_шинах_гпп()
-        self.расчет_полной_расчетной_мощности_на_шинах_гпп()
-        self.расчет_потерь_активной_мощности_в_трансф_гпп()
-        self.расчет_потерь_реактивной_мощности_в_трансф_гпп()
-        self.расчет_полной_расчетной_нагрузки_с_учетом_потерь_мощности()
-        self.расчет_напряжения_питающей_линии()
-        self.расчет__затрат()
-        self.расчет_затрат()
+        self.calc_of_power_loss_in_compensational_devices()
+        self.calc_of_calculated_active_power_on_gpp()
+        self.calc_of_calculated_reactive_power_on_tires_gpp()
+        self.calc_of_calculated_full_power_on_tires_gpp()
+        self.calc_of_loss_active_power_in_transf_gpp()
+        self.calc_of_loss_reactive_power_in_transf_gpp()
+        self.calc_of_full_calculated_load_with_account_of_power_losses()
+        self.calc_of_supply_line_voltage()
+        self.expenses__calculation()
+        self.expenses_calculation()
 
         # учет РП(мощности тп + мощности тп)
 
-        for _, (индекс_основного_цех, индексы_дополнительных_цехов) in enumerate(
-            карта_дополнительных_цехов.items()
+        for _, (main_workshop_index, additional_workshops_indexes) in enumerate(
+            additional_workshops_map.items()
         ):
-            основной_цех = self.цеха[индекс_основного_цех]
-            дополнительные_цеха = []
+            main_workshop = self.workshops[main_workshop_index]
+            additional_workshops = []
 
-            if индексы_дополнительных_цехов[0] == нет_доп_цехов:
-                основной_цех.calculated_reactive_power_сумма = (
-                    основной_цех.calculated_reactive_power
+            if additional_workshops_indexes[0] == no_additional_workshops:
+                main_workshop.calculated_reactive_power_сумма = (
+                    main_workshop.calculated_reactive_power
                 )
-                основной_цех.calculated_active_power_summ = (
-                    основной_цех.calculated_active_power
+                main_workshop.calculated_active_power_summ = (
+                    main_workshop.calculated_active_power
                 )
                 continue
 
-            for индекс_дополнительного_цеха in индексы_дополнительных_цехов:
-                дополнительные_цеха.append(self.цеха[индекс_дополнительного_цеха])
+            for additional_workshop_index in additional_workshops_indexes:
+                additional_workshops.append(self.workshops[additional_workshop_index])
 
-            self.расчёт_дополнительной_мощности(
-                основной_цех=основной_цех, дополнительные_цеха=дополнительные_цеха
+            self.calc_of_additional_power(
+                main_workshop=main_workshop, additional_workshops=additional_workshops
             )
 
 
 # noinspection NonAsciiCharacters
 def main():
-    workshops_conatiner = КонтейнерЦехов()
+    workshops_conatiner = WorkshopsContainer()
 
-    рп1 = "1 рп"
-    рп2 = "2 рп"
-    тр1 = "1 тр"
-    тр2 = "2 тр"
+    rp1 = "1 rp"
+    rp2 = "2 rp"
+    transf1 = "1 тр"
+    transf2 = "2 тр"
 
-    категории = [2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 3, 3, 2, 2, 2]
+    # категории = [2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 3, 3, 2, 2, 2]
 
-    варианты_схем = [
-        [рп1, тр1, тр2, рп2] if категория_цехов == 3 else [тр2]
-        for категория_цехов in категории
+    schemas_variants = [
+        [rp1, transf1, transf2, rp2] if workshop_category == 3 else [transf2]
+        for workshop_category in workshops_categories
     ]
 
-    for index, категория_цехов in enumerate(workshops_categories):
-        if категория_цехов == 3:
+    for index, workshop_category in enumerate(workshops_categories):
+        if workshop_category == 3:
             if (
-                workshops_conatiner.цеха[index].full_calculated_transformers_load
+                workshops_conatiner.workshops[index].full_calculated_transformers_load
                 <= 330
             ):
                 pass
 
             elif (
-                workshops_conatiner.цеха[index].full_calculated_transformers_load
+                workshops_conatiner.workshops[index].full_calculated_transformers_load
                 > 330
-                and workshops_conatiner.цеха[
+                and workshops_conatiner.workshops[
                     index
                 ].full_calculated_transformers_load
                 <= 660
             ):
 
-                варианты_схем[index].remove(рп1)
+                schemas_variants[index].remove(рп1)
 
             elif (
-                workshops_conatiner.цеха[index].full_calculated_transformers_load
+                workshops_conatiner.workshops[index].full_calculated_transformers_load
                 > 660
             ):
-                варианты_схем[index].remove(рп1)
+                schemas_variants[index].remove(рп1)
 
-                варианты_схем[index].remove(рп2)
+                schemas_variants[index].remove(рп2)
 
-    # print(варианты_схем)
+    # print(schemas_variants)
     # ------------------------s
-    список_всех_возможных_варианций_схем_с_учетом = list(
-        itertools.product(*варианты_схем)
+    list_of_all_schemas_variants_with = list(
+        itertools.product(*schemas_variants)
     )
     workshops_counts = 15
     # ------------------------e
@@ -968,15 +969,15 @@ def main():
     # ------------------------s
     # arr = []
 
-    # for вариант_схемы in список_всех_возможных_варианций_схем_с_учетом:
-    #     # print(вариант_схемы, 'вариант_схемы')
-    #     нули_и_единицы = [0] * workshops_counts
-    #     for цех in range(len(вариант_схемы)):
-    #         if вариант_схемы[цех] == тр2 or вариант_схемы[цех] == тр1:
-    #             нули_и_единицы[цех] = 1
+    # for schema_variant in list_of_all_schemas_variants_with:
+    #     # print(schema_variant, 'schema_variant')
+    #     zeros_and_ones = [0] * workshops_counts
+    #     for workshop in range(len(schema_variant)):
+    #         if schema_variant[workshop] == тр2 or schema_variant[workshop] == тр1:
+    #             zeros_and_ones[workshop] = 1
     #         else:
-    #             нули_и_единицы[цех] = 0
-    #     arr.append(нули_и_единицы)
+    #             zeros_and_ones[workshop] = 0
+    #     arr.append(zeros_and_ones)
     # ------------------------e
 
     # print(arr[2], 'arr[2]')
@@ -984,25 +985,25 @@ def main():
     # print(arr[2])
 
     # ------------------------s
-    # for вариант_схемы in arr:
-    #     for цех in range(len(вариант_схемы)):
-    #         if вариант_схемы[цех] == 1:
-    #             вариант_схемы[цех] = [-1]
-    #         elif вариант_схемы[цех] == 0:
-    #             вариант_схемы[цех] = []
+    # for schema_variant in arr:
+    #     for workshop in range(len(schema_variant)):
+    #         if schema_variant[workshop] == 1:
+    #             schema_variant[workshop] = [-1]
+    #         elif schema_variant[workshop] == 0:
+    #             schema_variant[workshop] = []
 
-    #     for цех in range(len(вариант_схемы)):
-    #         if вариант_схемы[цех] == []:
-    #             for цех_изб in range(len(вариант_схемы)):
-    #                 if вариант_схемы[цех_изб] == [-1]:
-    #                     вариант_схемы[цех].append(цех_изб)
+    #     for workshop in range(len(schema_variant)):
+    #         if schema_variant[workshop] == []:
+    #             for workshop_selected in range(len(schema_variant)):
+    #                 if schema_variant[workshop_selected] == [-1]:
+    #                     schema_variant[workshop].append(workshop_selected)
     # ------------------------e
 
     # print(arr[200], 'arr 200')
-    # print(список_всех_возможных_варианций_схем_с_учетом[500], 'индекс 500')
+    # print(list_of_all_schemas_variants_with[500], 'индекс 500')
     # print(arr[500], 'индекс 500')
     # print(arr[20], 'индекс 20')
-    # print(список_всех_возможных_варианций_схем_с_учетом[20], 'индекс 20')
+    # print(list_of_all_schemas_variants_with[20], 'индекс 20')
     # print(arr[2], 'index 1')
     # print(arr[5000], 'index 2')
     # print(zeros_and_ones)
@@ -1010,18 +1011,18 @@ def main():
     # [[-1], [-1], [-1], [-1], [-1], [-1], [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], [-1], [-1], [-1], [-1], [-1], [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11]]]
 
     # ------------------------s
-    # список_всех_возможных_подключений = []
+    # all_possible_connections_list = []
     # for список in arr:
-    #     список_всех_возможных_подключений.append(
+    #     all_possible_connections_list.append(
     #         list(itertools.product(*список)))
-    # print(список_всех_возможных_подключений)
+    # print(all_possible_connections_list)
     # ------------------------e
 
-    # список_всех_возможных_подключений = list(itertools.product(*ar[0]))
-    # print(список_всех_возможных_подключений[1000])
-    # print(список_всех_возможных_подключений)
+    # all_possible_connections_list = list(itertools.product(*ar[0]))
+    # print(all_possible_connections_list[1000])
+    # print(all_possible_connections_list)
     # result = []
-    # for p in список_всех_возможных_подключений:
+    # for p in all_possible_connections_list:
     #     result.append(p)
     # print(result)
     # print(len(result))
@@ -1029,8 +1030,8 @@ def main():
 
     # варианты_подключений = []
 
-    # for index, категория_цехов in enumerate(workshops_categories):
-    #     if категория_цехов == 3:
+    # for index, workshop_category in enumerate(workshops_categories):
+    #     if workshop_category == 3:
     #         for i in range(len(workshops_categories)):
     #             вариант_подключения = {}
     #             for key, val in вариант_подключения:
@@ -1038,70 +1039,70 @@ def main():
 
     # варианты_подключений[i] =
 
-    # print(workshops_conatiner.потери_мощности_в_ку)
-    # print(workshops_conatiner.полная_расчетная_мощность_на_шинах_гпп)
-    # print(workshops_conatiner.полная_расчетная_нагрузка_с_учетом_потерь_мощности)
-    # print(workshops_conatiner.напряжение_питающей_линии, 'напряжение_питающей_линии')
-    # print(workshops_conatiner.цеха[0].calculated_active_power, 'calculated_active_power цех 1')
-    # print(workshops_conatiner.цеха[0].calculated_reactive_power, 'calculated_reactive_power цех 1')
-    # print(workshops_conatiner.цеха[0].calculated_active_power_summ, 'calculated_active_power_summ цех 1')
-    # print(workshops_conatiner.цеха[0].calculated_reactive_power_сумма, 'calculated_reactive_power_сумма цех 1')
-    # print(workshops_conatiner.цеха[3].calculated_active_power, 'calculated_active_power цех 4')
-    # print(workshops_conatiner.цеха[6].calculated_active_power, 'calculated_active_power цех 7 ')
-    # print(workshops_conatiner.цеха[9].calculated_active_power, 'calculated_active_power цех 10 ')
-    # print(workshops_conatiner.цеха[3].calculated_active_power_summ, 'calculated_active_power_summ')
-    # print(workshops_conatiner.цеха[0].transformer_load_coeff, 'transformer_load_coeff')
-    # print(workshops_conatiner.цеха[0].reactive_power_loss_ts,
+    # print(workshops_conatiner.power_loss_in_compensational_devices)
+    # print(workshops_conatiner.full_calculated_power_on_tires_gpp)
+    # print(workshops_conatiner.full_calculated_load_with_account_of_power_losses)
+    # print(workshops_conatiner.supply_line_voltage, 'supply_line_voltage')
+    # print(workshops_conatiner.workshops[0].calculated_active_power, 'calculated_active_power workshop 1')
+    # print(workshops_conatiner.workshops[0].calculated_reactive_power, 'calculated_reactive_power workshop 1')
+    # print(workshops_conatiner.workshops[0].calculated_active_power_summ, 'calculated_active_power_summ workshop 1')
+    # print(workshops_conatiner.workshops[0].calculated_reactive_power_сумма, 'calculated_reactive_power_сумма workshop 1')
+    # print(workshops_conatiner.workshops[3].calculated_active_power, 'calculated_active_power workshop 4')
+    # print(workshops_conatiner.workshops[6].calculated_active_power, 'calculated_active_power workshop 7 ')
+    # print(workshops_conatiner.workshops[9].calculated_active_power, 'calculated_active_power workshop 10 ')
+    # print(workshops_conatiner.workshops[3].calculated_active_power_summ, 'calculated_active_power_summ')
+    # print(workshops_conatiner.workshops[0].transformer_load_coeff, 'transformer_load_coeff')
+    # print(workshops_conatiner.workshops[0].reactive_power_loss_ts,
     #       'reactive_power_loss_ts')
-    # print(workshops_conatiner.цеха[0].calculated_load_a_gpp_tp,
+    # print(workshops_conatiner.workshops[0].calculated_load_a_gpp_tp,
     #       'calculated_load_a_gpp_tp')
-    # print(workshops_conatiner.цеха[0].calculated_load_n_gpp_tp,
+    # print(workshops_conatiner.workshops[0].calculated_load_n_gpp_tp,
     #       'calculated_load_n_gpp_tp')
-    # print(workshops_conatiner.цеха[1].calculated_load_a_gpp_tp, 'calculated_load_a_gpp_tp')
-    # print(workshops_conatiner.цеха[1].calculated_load_n_gpp_tp, 'calculated_load_n_gpp_tp')
-    # print(workshops_conatiner.цеха[0].calculated_current_load_n_gpp_tp, 'calculated_current_load_n_gpp_tp')
-    # print(workshops_conatiner.цеха[1].permissible_voltage_loss, 'permissible_voltage_loss')
-    # print(workshops_conatiner.цеха[1].permissible_economic_current_density_loss, 'permissible_economic_current_density_loss')
-    # print(workshops_conatiner.цеха[0].permissible_current_load_a_gpp_tp, 'permissible_current_load_a_gpp_tp')
-    # print(workshops_conatiner.цеха[6].full_calculated_transformers_load, 'full_calculated_transformers_load')
-    # print(workshops_conatiner.цеха[3].calculated_active_power_summ, 'calculated_active_power_summ')
-    # print(workshops_conatiner.цеха[3].calculated_active_power, 'calculated_active_power')
-    # print(workshops_conatiner.цеха[6].calculated_active_power, 'calculated_active_power')
-    # print(workshops_conatiner.цеха[0].transformer_load_coeff, 'transformer_load_coeff')
+    # print(workshops_conatiner.workshops[1].calculated_load_a_gpp_tp, 'calculated_load_a_gpp_tp')
+    # print(workshops_conatiner.workshops[1].calculated_load_n_gpp_tp, 'calculated_load_n_gpp_tp')
+    # print(workshops_conatiner.workshops[0].calculated_current_load_n_gpp_tp, 'calculated_current_load_n_gpp_tp')
+    # print(workshops_conatiner.workshops[1].permissible_voltage_loss, 'permissible_voltage_loss')
+    # print(workshops_conatiner.workshops[1].permissible_economic_current_density_loss, 'permissible_economic_current_density_loss')
+    # print(workshops_conatiner.workshops[0].permissible_current_load_a_gpp_tp, 'permissible_current_load_a_gpp_tp')
+    # print(workshops_conatiner.workshops[6].full_calculated_transformers_load, 'full_calculated_transformers_load')
+    # print(workshops_conatiner.workshops[3].calculated_active_power_summ, 'calculated_active_power_summ')
+    # print(workshops_conatiner.workshops[3].calculated_active_power, 'calculated_active_power')
+    # print(workshops_conatiner.workshops[6].calculated_active_power, 'calculated_active_power')
+    # print(workshops_conatiner.workshops[0].transformer_load_coeff, 'transformer_load_coeff')
     print(
-        workshops_conatiner.цеха[0].electricity_loss_cost,
+        workshops_conatiner.workshops[0].electricity_loss_cost,
         "electricity_loss_cost",
     )
-    # print(workshops_conatiner.цеха[0].cost_losses_of_electric_energy_in_tp, 'cost_losses_of_electric_energy_in_tp')
+    # print(workshops_conatiner.workshops[0].cost_losses_of_electric_energy_in_tp, 'cost_losses_of_electric_energy_in_tp')
     print(
-        workshops_conatiner.цеха[11].transformer_load_coeff,
+        workshops_conatiner.workshops[11].transformer_load_coeff,
         "transformer_load_coeff",
     )
     print(
-        workshops_conatiner.цеха[11].full_calculated_transformers_load,
+        workshops_conatiner.workshops[11].full_calculated_transformers_load,
         "full_calculated_transformers_load",
     )
     print(
-        workshops_conatiner.цеха[11].calculated_transformers_power,
+        workshops_conatiner.workshops[11].calculated_transformers_power,
         "calculated_transformers_power",
     )
     print(
-        workshops_conatiner.цеха[11].preselected_transformer,
+        workshops_conatiner.workshops[11].preselected_transformer,
         "предварительно_selected_transformer",
     )
-    print(workshops_conatiner.цеха[11].selected_transformer, "selected_transformer")
-    print(workshops_conatiner.затраты, "затраты")
-    # print(workshops_conatiner.цеха[9].length, 'length')
-    # print(workshops_conatiner.цеха[1].length, 'length')
-    # print(workshops_conatiner.цеха[0].complex_reactive_power_after_compensation, 'complex_reactive_power_after_compensation')
+    print(workshops_conatiner.workshops[11].selected_transformer, "selected_transformer")
+    print(workshops_conatiner.expenses, "expenses")
+    # print(workshops_conatiner.workshops[9].length, 'length')
+    # print(workshops_conatiner.workshops[1].length, 'length')
+    # print(workshops_conatiner.workshops[0].complex_reactive_power_after_compensation, 'complex_reactive_power_after_compensation')
 
-    # print(workshops_conatiner.цеха[1].chosen_cable, 'chosen_cable ЦЕХ 2')
-    # print(workshops_conatiner.цеха[0].color_material_consumption, 'color_material_consumption')
-    # print(workshops_conatiner.цеха[0].cable_current, 'cable_current')
+    # print(workshops_conatiner.workshops[1].chosen_cable, 'chosen_cable workshop 2')
+    # print(workshops_conatiner.workshops[0].color_material_consumption, 'color_material_consumption')
+    # print(workshops_conatiner.workshops[0].cable_current, 'cable_current')
 
-    # print(workshops_conatiner.цеха[0].load_coeff, 'коэффициент_загрузк��')
-    # for цех in workshops_conatiner.цеха:
-    #     print(цех.full_calculated_transformers_load, 'full_calculated_transformers_load ')
+    # print(workshops_conatiner.workshops[0].load_coeff, 'коэффициент_загрузк��')
+    # for workshop in workshops_conatiner.workshops:
+    #     print(workshop.full_calculated_transformers_load, 'full_calculated_transformers_load ')
 
 
 if __name__ == "__main__":
