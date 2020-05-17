@@ -246,7 +246,7 @@ class Workshop:
             )
 
 
-    def расчет_расчетной_токовой_нагрузки_а_гпп_тп(self):
+    def calc_of_calculated_current_load_a_gpp_tp(self):
         if self.transformers_count != 0:
             self.calculated_current_load_a_gpp_tp = (
                 self.calculated_load_a_gpp_tp / (sqrt(3) * 10)
@@ -612,7 +612,7 @@ class Workshop:
         self.calc_of_calculated_load_a_gpp_tp()
         self.calc_of_calculated_load_n_gpp_tp()
         self.calc_of_k1(transformers_count)
-        self.расчет_расчетной_токовой_нагрузки_а_гпп_тп()
+        self.calc_of_calculated_current_load_a_gpp_tp()
         self.расчет_расчетной_токовой_нагрузки_н_гпп_тп()
         self.calc_of_permissible_current_load_n_gpp_tp()
         self.calc_of_permissible_current_load_a_gpp_tp()
@@ -648,11 +648,11 @@ class Workshop:
         self.calc_of_length(workshops_coords)
 
     # def __repr__(self):
-    # return "<workshop input_param:%d some_param:%d other_param:%d>" %
+    # return "<Workshop input_param:%d some_param:%d other_param:%d>" %
     # (self.input_param, self.some_param, self.other_param)
 
     # def __str__(self):
-    # return "<workshop input_param:%d some_param:%d other_param:%d>" %
+    # return "<Workshop input_param:%d some_param:%d other_param:%d>" %
     # (self.input_param, self.some_param, self.other_param)
 
 
@@ -816,12 +816,12 @@ class WorkshopsContainer:
             main_workshop.calculated_active_power
         )
 
-        for дополнительный_цех in additional_workshops:
+        for additional_workshop in additional_workshops:
             main_workshop.calculated_reactive_power_сумма += (
-                дополнительный_цех.calculated_reactive_power
+                additional_workshop.calculated_reactive_power
             )
             main_workshop.calculated_active_power_summ += (
-                дополнительный_цех.calculated_active_power
+                additional_workshop.calculated_active_power
             )
 
     к_л = 0
@@ -1088,7 +1088,7 @@ def main():
     )
     print(
         workshops_conatiner.workshops[11].preselected_transformer,
-        "предварительно_selected_transformer",
+        "pre_selected_transformer",
     )
     print(workshops_conatiner.workshops[11].selected_transformer, "selected_transformer")
     print(workshops_conatiner.expenses, "expenses")
