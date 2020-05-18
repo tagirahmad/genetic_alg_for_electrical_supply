@@ -14,7 +14,7 @@ class Workshop:
     calculated_active_power = 0
     calculated_reactive_power = 0
     calculated_active_power_summ = 0
-    calculated_reactive_power_сумма = 0
+    calculated_reactive_power_summ = 0
     calculated_full_power = 0
     tan_fi_n = 0
     power_of_compensating_devices = 0
@@ -158,6 +158,7 @@ class Workshop:
                 ),
                 2,
             )
+
     def calc_of_active_power_loss_ts(self, transformers_types):
         if transformers_types == "масляный" and self.selected_transformer != None:
             self.active_power_loss_ts = delta_p_xx_tm[
@@ -213,7 +214,7 @@ class Workshop:
                 )
                 ** 2
                 + (
-                    self.calculated_reactive_power_сумма
+                    self.calculated_reactive_power_summ
                     + self.reactive_power_loss_ts
                 )
                 ** 2
@@ -237,7 +238,7 @@ class Workshop:
                 ** 2
                 + (
                     (
-                        self.calculated_reactive_power_сумма
+                        self.calculated_reactive_power_summ
                         / self.transformers_count
                     )
                     + self.reactive_power_loss_ts
@@ -245,13 +246,13 @@ class Workshop:
                 ** 2
             )
 
-
     def calc_of_calculated_current_load_a_gpp_tp(self):
         if self.transformers_count != 0:
             self.calculated_current_load_a_gpp_tp = (
                 self.calculated_load_a_gpp_tp / (sqrt(3) * 10)
             )
-            print(self.calculated_load_a_gpp_tp, "self.calculated_load_a_gpp_tp")
+            print(self.calculated_load_a_gpp_tp,
+                  "self.calculated_load_a_gpp_tp")
         elif self.transformers_count == 0:
             self.calculated_current_load_a_gpp_tp = (
                 self.full_calculated_transformers_load / (sqrt(3) * 10)
@@ -466,7 +467,7 @@ class Workshop:
         )
 
     def calc_of_deprecation_value_for_switcher(self):
-        self.deprecation_value_for_switcher  = (
+        self.deprecation_value_for_switcher = (
             coefficient_depreciation_deductions_switcher
             * self.capital_investments_switcher
         )
@@ -476,7 +477,9 @@ class Workshop:
     ):
         if transformers_count != 0:
             self.transformer_price = (
-                transformers_count * transformers_prices[nominal_powers_of_transformers.index(self.selected_transformer)]
+                transformers_count *
+                transformers_prices[nominal_powers_of_transformers.index(
+                    self.selected_transformer)]
             )
 
     def calc_of_reduced_losses_in_tp(
@@ -620,7 +623,8 @@ class Workshop:
         self.calc_of_line_investments(
             transformers_count, line_lengths
         )
-        self.calc_of_color_material_consumption(transformers_count, line_lengths)
+        self.calc_of_color_material_consumption(
+            transformers_count, line_lengths)
         self.calc_of_load_coeff(transformers_count)
         self.calc_of_power_loss_of_considered_line(
             transformers_count, line_lengths
@@ -727,7 +731,8 @@ class WorkshopsContainer:
         )
 
     def calc_of_power_loss_in_compensational_devices(self):
-        self.power_loss_in_compensational_devices = 0.002 * self.power_of_compensating_devices
+        self.power_loss_in_compensational_devices = 0.002 * \
+            self.power_of_compensating_devices
 
     def calc_of_calculated_active_power_on_gpp(self):
         self.calculated_active_power_on_gpp = (
@@ -809,7 +814,7 @@ class WorkshopsContainer:
     def calc_of_additional_power(
         self, main_workshop: Workshop, additional_workshops: [Workshop]
     ):
-        main_workshop.calculated_reactive_power_сумма = (
+        main_workshop.calculated_reactive_power_summ = (
             main_workshop.calculated_reactive_power
         )
         main_workshop.calculated_active_power_summ = (
@@ -817,7 +822,7 @@ class WorkshopsContainer:
         )
 
         for additional_workshop in additional_workshops:
-            main_workshop.calculated_reactive_power_сумма += (
+            main_workshop.calculated_reactive_power_summ += (
                 additional_workshop.calculated_reactive_power
             )
             main_workshop.calculated_active_power_summ += (
@@ -899,7 +904,7 @@ class WorkshopsContainer:
             additional_workshops = []
 
             if additional_workshops_indexes[0] == no_additional_workshops:
-                main_workshop.calculated_reactive_power_сумма = (
+                main_workshop.calculated_reactive_power_summ = (
                     main_workshop.calculated_reactive_power
                 )
                 main_workshop.calculated_active_power_summ = (
@@ -908,7 +913,8 @@ class WorkshopsContainer:
                 continue
 
             for additional_workshop_index in additional_workshops_indexes:
-                additional_workshops.append(self.workshops[additional_workshop_index])
+                additional_workshops.append(
+                    self.workshops[additional_workshop_index])
 
             self.calc_of_additional_power(
                 main_workshop=main_workshop, additional_workshops=additional_workshops
@@ -948,57 +954,65 @@ def main():
                 <= 660
             ):
 
-                schemas_variants[index].remove(рп1)
+                schemas_variants[index].remove(rp1)
 
             elif (
                 workshops_conatiner.workshops[index].full_calculated_transformers_load
                 > 660
             ):
-                schemas_variants[index].remove(рп1)
+                schemas_variants[index].remove(rp1)
 
-                schemas_variants[index].remove(рп2)
+                schemas_variants[index].remove(rp2)
 
-    # print(schemas_variants)
+    print(schemas_variants)
     # ------------------------s
     list_of_all_schemas_variants_with = list(
         itertools.product(*schemas_variants)
     )
     workshops_counts = 15
+    print(len(list_of_all_schemas_variants_with),
+          'list_of_all_schemas_variants_with')
     # ------------------------e
 
     # ------------------------s
-    # arr = []
+    arr = []
 
-    # for schema_variant in list_of_all_schemas_variants_with:
-    #     # print(schema_variant, 'schema_variant')
-    #     zeros_and_ones = [0] * workshops_counts
-    #     for workshop in range(len(schema_variant)):
-    #         if schema_variant[workshop] == тр2 or schema_variant[workshop] == тр1:
-    #             zeros_and_ones[workshop] = 1
-    #         else:
-    #             zeros_and_ones[workshop] = 0
-    #     arr.append(zeros_and_ones)
+    for schema_variant in list_of_all_schemas_variants_with:
+        # print(schema_variant, 'schema_variant')
+        zeros_and_ones = [0] * workshops_counts
+        for workshop in range(len(schema_variant)):
+            if schema_variant[workshop] == transf2 or schema_variant[workshop] == transf1:
+                zeros_and_ones[workshop] = 1
+            else:
+                zeros_and_ones[workshop] = 0
+        arr.append(zeros_and_ones)
     # ------------------------e
-
-    # print(arr[2], 'arr[2]')
+    print(arr, 'arr')
+    print(len(arr), 'len of arr')
+    print(arr[2], 'arr[2]')
     # array.append(zeros_and_ones)
-    # print(arr[2])
+    print(arr[2])
 
     # ------------------------s
-    # for schema_variant in arr:
-    #     for workshop in range(len(schema_variant)):
-    #         if schema_variant[workshop] == 1:
-    #             schema_variant[workshop] = [-1]
-    #         elif schema_variant[workshop] == 0:
-    #             schema_variant[workshop] = []
+    for schema_variant in arr:
+        for workshop in range(len(schema_variant)):
+            if schema_variant[workshop] == 1:
+                schema_variant[workshop] = [-1]
+                # -1 means 2transformers 
+            elif schema_variant[workshop] == 0:
+                schema_variant[workshop] = []
+                # [] for collecting into it what workshops where might be connect
 
-    #     for workshop in range(len(schema_variant)):
-    #         if schema_variant[workshop] == []:
-    #             for workshop_selected in range(len(schema_variant)):
-    #                 if schema_variant[workshop_selected] == [-1]:
-    #                     schema_variant[workshop].append(workshop_selected)
+        for workshop in range(len(schema_variant)):
+            if schema_variant[workshop] == []:
+                for workshop_selected in range(len(schema_variant)):
+                    if schema_variant[workshop_selected] == [-1]:
+                        schema_variant[workshop].append(workshop_selected)
+                        print(schema_variant[workshop])
+    
+    print(arr)
     # ------------------------e
-
+    # print(len(arr), 'arr 22222')
     # print(arr[200], 'arr 200')
     # print(list_of_all_schemas_variants_with[500], 'индекс 500')
     # print(arr[500], 'индекс 500')
@@ -1011,11 +1025,14 @@ def main():
     # [[-1], [-1], [-1], [-1], [-1], [-1], [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], [-1], [-1], [-1], [-1], [-1], [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11], [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11]]]
 
     # ------------------------s
-    # all_possible_connections_list = []
-    # for список in arr:
-    #     all_possible_connections_list.append(
-    #         list(itertools.product(*список)))
-    # print(all_possible_connections_list)
+    all_possible_connections_list = []
+    for список in arr:
+        all_possible_connections_list.append(
+            list(itertools.product(*список)))
+    print(len(all_possible_connections_list), 'all_possible_connections_list')
+    print(all_possible_connections_list, 'all_possible_connections_list')
+    print(all_possible_connections_list[1][100], 'all_possible_connections_list 0')
+    # print(all_possible_connections_list[1], 'all_possible_connections_list 1')
     # ------------------------e
 
     # all_possible_connections_list = list(itertools.product(*ar[0]))
@@ -1046,7 +1063,7 @@ def main():
     # print(workshops_conatiner.workshops[0].calculated_active_power, 'calculated_active_power workshop 1')
     # print(workshops_conatiner.workshops[0].calculated_reactive_power, 'calculated_reactive_power workshop 1')
     # print(workshops_conatiner.workshops[0].calculated_active_power_summ, 'calculated_active_power_summ workshop 1')
-    # print(workshops_conatiner.workshops[0].calculated_reactive_power_сумма, 'calculated_reactive_power_сумма workshop 1')
+    # print(workshops_conatiner.workshops[0].calculated_reactive_power_summ, 'calculated_reactive_power_summ workshop 1')
     # print(workshops_conatiner.workshops[3].calculated_active_power, 'calculated_active_power workshop 4')
     # print(workshops_conatiner.workshops[6].calculated_active_power, 'calculated_active_power workshop 7 ')
     # print(workshops_conatiner.workshops[9].calculated_active_power, 'calculated_active_power workshop 10 ')
@@ -1090,7 +1107,8 @@ def main():
         workshops_conatiner.workshops[11].preselected_transformer,
         "pre_selected_transformer",
     )
-    print(workshops_conatiner.workshops[11].selected_transformer, "selected_transformer")
+    print(
+        workshops_conatiner.workshops[11].selected_transformer, "selected_transformer")
     print(workshops_conatiner.expenses, "expenses")
     # print(workshops_conatiner.workshops[9].length, 'length')
     # print(workshops_conatiner.workshops[1].length, 'length')
