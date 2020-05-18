@@ -850,15 +850,15 @@ class WorkshopsContainer:
             self.с_аэа += self.workshops[i].deprecation_value_for_switcher
             self.с_атп += self.workshops[i].deprecation_value_for_tp
 
-    def expenses_calculation(self):
-        self.expenses = (
-            0.15 * (self.к_л + self.к_эа + self.к_тп)
-            + self.с_ал
-            + self.с_пт
-            + self.с_пл
-            + self.с_аэа
-            + self.с_атп
-        )
+    # def expenses_calculation(self):
+    #     self.expenses = (
+    #         0.15 * (self.к_л + self.к_эа + self.к_тп)
+    #         + self.с_ал
+    #         + self.с_пт
+    #         + self.с_пл
+    #         + self.с_аэа
+    #         + self.с_атп
+    #     )
 
     def __init__(self):
         self.workshops = []
@@ -893,7 +893,7 @@ class WorkshopsContainer:
         self.calc_of_full_calculated_load_with_account_of_power_losses()
         self.calc_of_supply_line_voltage()
         self.expenses__calculation()
-        self.expenses_calculation()
+        # self.expenses_calculation()
 
         # учет РП(мощности тп + мощности тп)
 
