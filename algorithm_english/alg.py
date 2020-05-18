@@ -927,8 +927,8 @@ def main():
 
     rp1 = "1 rp"
     rp2 = "2 rp"
-    transf1 = "1 тр"
-    transf2 = "2 тр"
+    transf1 = "1 tr"
+    transf2 = "2 tr"
 
     # категории = [2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 3, 3, 2, 2, 2]
 
