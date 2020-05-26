@@ -100,13 +100,13 @@ class Workshop:
         self, transformers_count
     ):
         self.complex_reactive_power_after_compensation = (
-            self.calculated_reactive_power
+            self.calculated_reactive_power_summ
             - self.transformers_count * self.chosen_compens_device
         )
 
     def calc_of_full_calculated_transformers_load(self):
         self.full_calculated_transformers_load = sqrt(
-            self.calculated_active_power ** 2
+            self.calculated_active_power_summ ** 2
             + self.complex_reactive_power_after_compensation ** 2
         )
 
@@ -220,6 +220,7 @@ class Workshop:
                 ** 2
             )
             print(self.calculated_load_a_gpp_tp, "calculated_load_a_gpp_tp")
+            print(self.calculated_reactive_power_summ, "calculated_reactive_power_summ")
             print(
                 self.calculated_active_power_summ,
                 "calculated_active_power_summ",
@@ -660,23 +661,22 @@ class Workshop:
     # (self.input_param, self.some_param, self.other_param)
 
 
-no_additional_workshops = -1
 additional_workshops_map = {
-    0: [no_additional_workshops],
-    1: [no_additional_workshops],
-    2: [no_additional_workshops],
-    3: [no_additional_workshops],
-    4: [no_additional_workshops],
-    5: [no_additional_workshops],
-    6: [no_additional_workshops],
-    7: [no_additional_workshops],
+    0: [],
+    1: [],
+    2: [],
+    3: [],
+    4: [],
+    5: [],
+    6: [],
+    7: [],
     8: [6],
-    9: [no_additional_workshops],
-    10: [no_additional_workshops],
-    11: [no_additional_workshops],
+    9: [],
+    10: [],
+    11: [],
     12: [11],
     13: [10],
-    14: [no_additional_workshops],
+    14: [],
 }  # НУЖНО НЕ ЗАБЫТЬ УЧЕСТЬ, что это индексы цехов, а не сами цеха
 
 
@@ -897,13 +897,11 @@ class WorkshopsContainer:
 
         # учет РП(мощности тп + мощности тп)
 
-        for _, (main_workshop_index, additional_workshops_indexes) in enumerate(
-            additional_workshops_map.items()
-        ):
+        for  main_workshop_index, additional_workshops_indexes in additional_workshops_map.items():
             main_workshop = self.workshops[main_workshop_index]
             additional_workshops = []
 
-            if additional_workshops_indexes[0] == no_additional_workshops:
+            if len(additional_workshops_indexes) == 0:
                 main_workshop.calculated_reactive_power_summ = (
                     main_workshop.calculated_reactive_power
                 )
@@ -1082,7 +1080,7 @@ def main():
     # print(workshops_conatiner.workshops[1].permissible_economic_current_density_loss, 'permissible_economic_current_density_loss')
     # print(workshops_conatiner.workshops[0].permissible_current_load_a_gpp_tp, 'permissible_current_load_a_gpp_tp')
     # print(workshops_conatiner.workshops[6].full_calculated_transformers_load, 'full_calculated_transformers_load')
-    # print(workshops_conatiner.workshops[3].calculated_active_power_summ, 'calculated_active_power_summ')
+    print(workshops_conatiner.workshops[3].calculated_active_power_summ, 'calculated_active_power_summ')
     # print(workshops_conatiner.workshops[3].calculated_active_power, 'calculated_active_power')
     # print(workshops_conatiner.workshops[6].calculated_active_power, 'calculated_active_power')
     # print(workshops_conatiner.workshops[0].transformer_load_coeff, 'transformer_load_coeff')
